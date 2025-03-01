@@ -5,11 +5,8 @@ import {Logger} from 'homebridge';
 import {Config} from "../Config";
 import * as Events from './Events';
 import {Device} from "./Device";
-import {Camera} from "./Camera";
-import {Doorbell} from "./Doorbell";
 import {Thermostat} from "./Thermostat";
 import {UnknownDevice} from "./UnknownDevice";
-import {Display} from "./Display";
 
 export class SmartDeviceManagement {
     private oauth2Client: google.Auth.OAuth2Client;
@@ -101,12 +98,6 @@ export class SmartDeviceManagement {
                 .filter(device => device.name !== null)
                 .map(device => {
                     switch (device.type) {
-                        case 'sdm.devices.types.DOORBELL':
-                            return new Doorbell(this.smartdevicemanagement, device, this.log)
-                        case 'sdm.devices.types.CAMERA':
-                            return new Camera(this.smartdevicemanagement, device, this.log)
-                        case 'sdm.devices.types.DISPLAY':
-                            return new Display(this.smartdevicemanagement, device, this.log)
                         case 'sdm.devices.types.THERMOSTAT':
                             return new Thermostat(this.smartdevicemanagement, device, this.log)
                         default:

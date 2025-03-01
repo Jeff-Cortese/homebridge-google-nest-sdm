@@ -2,13 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Platform = void 0;
 const Settings_1 = require("./Settings");
-const CameraAccessory_1 = require("./CameraAccessory");
 const Api_1 = require("./sdm/Api");
 const ThermostatAccessory_1 = require("./ThermostatAccessory");
-const Camera_1 = require("./sdm/Camera");
 const Thermostat_1 = require("./sdm/Thermostat");
-const Doorbell_1 = require("./sdm/Doorbell");
-const DoorbellAccessory_1 = require("./DoorbellAccessory");
 const EcoMode = require("./EcoMode");
 const FanAccessory_1 = require("./FanAccessory");
 const UnknownDevice_1 = require("./sdm/UnknownDevice");
@@ -68,11 +64,7 @@ class Platform {
             .map(device => {
             const uuid = this.api.hap.uuid.generate(device.getName());
             const category = (() => {
-                if (device instanceof Doorbell_1.Doorbell)
-                    return 18 /* VIDEO_DOORBELL */;
-                else if (device instanceof Camera_1.Camera)
-                    return 17 /* CAMERA */;
-                else if (device instanceof Thermostat_1.Thermostat)
+                if (device instanceof Thermostat_1.Thermostat)
                     return 9 /* THERMOSTAT */;
                 else if (device instanceof UnknownDevice_1.UnknownDevice)
                     return 1 /* OTHER */;
@@ -105,12 +97,6 @@ class Platform {
                 deviceInfo.existingAccessory.context.device = deviceInfo.device;
                 this.api.updatePlatformAccessories([deviceInfo.existingAccessory]);
                 switch (deviceInfo.category) {
-                    case 18 /* VIDEO_DOORBELL */:
-                        new DoorbellAccessory_1.DoorbellAccessory(this.api, this.log, this, deviceInfo.existingAccessory, deviceInfo.device);
-                        break;
-                    case 17 /* CAMERA */:
-                        new CameraAccessory_1.CameraAccessory(this.api, this.log, this, deviceInfo.existingAccessory, deviceInfo.device);
-                        break;
                     case 9 /* THERMOSTAT */:
                         new ThermostatAccessory_1.ThermostatAccessory(this.api, this.log, this, deviceInfo.existingAccessory, deviceInfo.device);
                         break;
@@ -123,16 +109,6 @@ class Platform {
             }
             else {
                 switch (deviceInfo.category) {
-                    case 18 /* VIDEO_DOORBELL */:
-                        const doorbellPlatformAccessory = this.getPlatformAccessory(deviceInfo.device, deviceInfo.device.getDisplayName(), deviceInfo.uuid, 18 /* VIDEO_DOORBELL */);
-                        new DoorbellAccessory_1.DoorbellAccessory(this.api, this.log, this, doorbellPlatformAccessory, deviceInfo.device);
-                        this.api.registerPlatformAccessories(Settings_1.PLUGIN_NAME, Settings_1.PLATFORM_NAME, [doorbellPlatformAccessory]);
-                        break;
-                    case 17 /* CAMERA */:
-                        const cameraPlatformAccessory = this.getPlatformAccessory(deviceInfo.device, deviceInfo.device.getDisplayName(), deviceInfo.uuid, 17 /* CAMERA */);
-                        new CameraAccessory_1.CameraAccessory(this.api, this.log, this, cameraPlatformAccessory, deviceInfo.device);
-                        this.api.registerPlatformAccessories(Settings_1.PLUGIN_NAME, Settings_1.PLATFORM_NAME, [cameraPlatformAccessory]);
-                        break;
                     case 9 /* THERMOSTAT */:
                         let thermostatPlatformAccessory = this.getPlatformAccessory(deviceInfo.device, deviceInfo.device.getDisplayName(), deviceInfo.uuid, 9 /* THERMOSTAT */);
                         new ThermostatAccessory_1.ThermostatAccessory(this.api, this.log, this, thermostatPlatformAccessory, deviceInfo.device);

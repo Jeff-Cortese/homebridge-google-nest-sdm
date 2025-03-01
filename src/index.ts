@@ -10,3 +10,4 @@ import { Platform } from './Platform';
 export = (api: API) => {
     api.registerPlatform(PLATFORM_NAME, Platform);
 };
+

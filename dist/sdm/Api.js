@@ -26,11 +26,8 @@ exports.SmartDeviceManagement = void 0;
 const lodash_1 = __importDefault(require("lodash"));
 const google = __importStar(require("googleapis"));
 const pubsub = __importStar(require("@google-cloud/pubsub"));
-const Camera_1 = require("./Camera");
-const Doorbell_1 = require("./Doorbell");
 const Thermostat_1 = require("./Thermostat");
 const UnknownDevice_1 = require("./UnknownDevice");
-const Display_1 = require("./Display");
 class SmartDeviceManagement {
     constructor(config, log) {
         this.subscribed = true;
@@ -101,12 +98,6 @@ class SmartDeviceManagement {
                 .filter(device => device.name !== null)
                 .map(device => {
                 switch (device.type) {
-                    case 'sdm.devices.types.DOORBELL':
-                        return new Doorbell_1.Doorbell(this.smartdevicemanagement, device, this.log);
-                    case 'sdm.devices.types.CAMERA':
-                        return new Camera_1.Camera(this.smartdevicemanagement, device, this.log);
-                    case 'sdm.devices.types.DISPLAY':
-                        return new Display_1.Display(this.smartdevicemanagement, device, this.log);
                     case 'sdm.devices.types.THERMOSTAT':
                         return new Thermostat_1.Thermostat(this.smartdevicemanagement, device, this.log);
                     default:

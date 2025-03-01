@@ -9,14 +9,10 @@ import {
 } from 'homebridge';
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './Settings';
-import { CameraAccessory } from './CameraAccessory';
 import {SmartDeviceManagement} from './sdm/Api';
 import {Config} from "./Config";
 import {ThermostatAccessory} from "./ThermostatAccessory";
-import {Camera} from "./sdm/Camera";
 import {Thermostat} from "./sdm/Thermostat";
-import {Doorbell} from "./sdm/Doorbell";
-import {DoorbellAccessory} from "./DoorbellAccessory";
 import EcoMode = require('./EcoMode');
 import {FanAccessory} from "./FanAccessory";
 import {Device} from "./sdm/Device";
@@ -96,11 +92,7 @@ export class Platform implements DynamicPlatformPlugin {
             .map(device => {
                 const uuid = this.api.hap.uuid.generate(device.getName());
                 const category = (() => {
-                    if (device instanceof Doorbell)
-                        return this.api.hap.Categories.VIDEO_DOORBELL;
-                    else if (device instanceof Camera)
-                        return this.api.hap.Categories.CAMERA;
-                    else if (device instanceof Thermostat)
+                    if (device instanceof Thermostat)
                         return this.api.hap.Categories.THERMOSTAT;
                     else if (device instanceof UnknownDevice)
                         return this.api.hap.Categories.OTHER;
@@ -140,12 +132,6 @@ export class Platform implements DynamicPlatformPlugin {
                 this.api.updatePlatformAccessories([deviceInfo.existingAccessory]);
 
                 switch (deviceInfo.category) {
-                    case this.api.hap.Categories.VIDEO_DOORBELL:
-                        new DoorbellAccessory(this.api, this.log, this, deviceInfo.existingAccessory, deviceInfo.device as Doorbell);
-                        break;
-                    case this.api.hap.Categories.CAMERA:
-                        new CameraAccessory(this.api, this.log, this, deviceInfo.existingAccessory, deviceInfo.device as Camera);
-                        break;
                     case this.api.hap.Categories.THERMOSTAT:
                         new ThermostatAccessory(this.api, this.log, this, deviceInfo.existingAccessory, deviceInfo.device as Thermostat);
                         break;
@@ -158,16 +144,6 @@ export class Platform implements DynamicPlatformPlugin {
                 this.api.updatePlatformAccessories([deviceInfo.existingAccessory]);
             } else {
                 switch (deviceInfo.category) {
-                    case this.api.hap.Categories.VIDEO_DOORBELL:
-                        const doorbellPlatformAccessory = this.getPlatformAccessory(deviceInfo.device, deviceInfo.device.getDisplayName(), deviceInfo.uuid, this.api.hap.Categories.VIDEO_DOORBELL);
-                        new DoorbellAccessory(this.api, this.log, this, doorbellPlatformAccessory, deviceInfo.device as Doorbell);
-                        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [doorbellPlatformAccessory]);
-                        break;
-                    case this.api.hap.Categories.CAMERA:
-                        const cameraPlatformAccessory = this.getPlatformAccessory(deviceInfo.device, deviceInfo.device.getDisplayName(), deviceInfo.uuid, this.api.hap.Categories.CAMERA);
-                        new CameraAccessory(this.api, this.log, this, cameraPlatformAccessory, deviceInfo.device as Camera);
-                        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [cameraPlatformAccessory]);
-                        break;
                     case this.api.hap.Categories.THERMOSTAT:
                         let thermostatPlatformAccessory = this.getPlatformAccessory(deviceInfo.device, deviceInfo.device.getDisplayName(), deviceInfo.uuid, this.api.hap.Categories.THERMOSTAT);
                         new ThermostatAccessory(this.api, this.log, this, thermostatPlatformAccessory, deviceInfo.device as Thermostat);
